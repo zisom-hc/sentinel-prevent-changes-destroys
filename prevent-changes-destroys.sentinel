@@ -1,9 +1,11 @@
 import "tfplan/v2" as tfplan
 
-main = rule {
-  all tfplan.resource_changes as _, changes {
-    if changes.change.actions contains "delete" {
-      false
-    } else true
+no_updates_or_destroys = rule {
+  all tfplan.resource_changes as _, rc {
+    rc.change.actions not in ["update", "destroy"]
   }
+}
+
+main = rule {
+  no_updates_or_destroys
 }
