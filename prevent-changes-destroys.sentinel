@@ -1,0 +1,7 @@
+import "tfplan/v2" as tfplan
+
+main = rule {
+  all tfplan.planned_values.resource_changes as rc {
+    (rc.change.actions is ["no-op"]) or (rc.change.actions is [])
+  }
+}
