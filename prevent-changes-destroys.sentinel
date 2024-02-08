@@ -1,8 +1,9 @@
 import "tfplan/v2" as tfplan
 
 main = rule {
-  all tfplan.planned_values.resource_changes as _, changes {
-    (changes.change.actions contains "create") or
-    (changes.change.actions contains "delete")
-  } else true
+  all tfplan.resource_changes as _, changes {
+    if changes.change.actions contains "delete" {
+      false
+    } else true
+  }
 }
