@@ -2,16 +2,19 @@ import "tfplan/v2" as tfplan
 
 param actions default [
 	["update"],
-  ["delete"],
-  ["delete", "create"],
-  ["create", "delete"],
+  	["delete"],
+  	["delete", "create"],
+  	["create", "delete"],
 ]
 
 no_updates_or_destroys = filter tfplan.resource_changes as _, rc {
   rc.change.actions in actions
 }
 
-print(no_updates_or_destroys)
+for no_updates_or_destroys as _, violation {
+  print("VIOLATING RESOURCE:", violation.address)
+  print("ACTION:", violation.change.actions)
+}
 
 # This rule makes sure that no destruction takes place without an override
 main = rule {
