@@ -1,9 +1,9 @@
 import "tfplan/v2" as tfplan
 
+no_updates_or_destroys = filter tfplan.resource_changes as _, rc {
+	rc.change.actions is ["delete"] or rc.change.actions contains ["update"]
+}
+
 main = rule {
-  
-  update := tfplan.resource_changes[_].change.actions[_] contains "update"
-  destroy := tfplan.resource_changes[_].change.actions[_] contains "destroy"
-  
-  update or destroy
+	length(no_updates_or_destroys) == 0
 }
